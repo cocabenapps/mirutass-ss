@@ -20,6 +20,11 @@ let origenModificado = false;
 let seleccionandoOrigen = false;
 let seleccionandoDestino = false;
 
+// Variables para tutorial
+let tutorialActivo = false;
+let pasoActual = 1;
+const totalPasos = 4;
+
 // ============================================
 // FUNCIONES DE UI Y NOTIFICACIONES
 // ============================================
@@ -57,6 +62,138 @@ function actualizarEstadoNav(boton, activo) {
 }
 
 // ============================================
+// SISTEMA DE TUTORIAL
+// ============================================
+function iniciarTutorial() {
+    tutorialActivo = true;
+    pasoActual = 1;
+    mostrarPaso(pasoActual);
+    document.getElementById('tutorial-overlay').classList.add('show');
+    
+    // Deshabilitar interacción con el mapa mientras el tutorial está activo
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+}
+
+function mostrarPaso(numero) {
+    // Ocultar todos los pasos
+    document.querySelectorAll('.tutorial-step').forEach(step => {
+        step.style.display = 'none';
+    });
+    
+    // Mostrar el paso actual
+    const pasoElemento = document.getElementById(`step${numero}`);
+    if (pasoElemento) {
+        pasoElemento.style.display = 'block';
+    }
+    
+    // Posicionar el anillo de enfoque
+    posicionarAnilloEnfoque(numero);
+}
+
+function posicionarAnilloEnfoque(paso) {
+    const anillo = document.getElementById('focus-ring');
+    const botones = document.querySelectorAll('.nav-item');
+    
+    if (botones[paso - 1]) {
+        const botonRect = botones[paso - 1].getBoundingClientRect();
+        const bottomNavRect = document.getElementById('bottom-nav').getBoundingClientRect();
+        
+        // Calcular posición centrada en el botón
+        const centerX = botonRect.left + botonRect.width / 2;
+        const centerY = botonRect.top + botonRect.height / 2;
+        
+        // Ajustar para que esté dentro de la vista del tutorial
+        anillo.style.left = `${centerX}px`;
+        anillo.style.top = `${centerY}px`;
+        anillo.style.transform = `translate(-50%, -50%)`;
+    }
+}
+
+function siguientePaso() {
+    if (pasoActual < totalPasos) {
+        pasoActual++;
+        mostrarPaso(pasoActual);
+    } else {
+        finalizarTutorial();
+    }
+}
+
+function anteriorPaso() {
+    if (pasoActual > 1) {
+        pasoActual--;
+        mostrarPaso(pasoActual);
+    }
+}
+
+function finalizarTutorial() {
+    tutorialActivo = false;
+    document.getElementById('tutorial-overlay').classList.remove('show');
+    
+    // Rehabilitar interacción con el mapa
+    map.dragging.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
+    
+    // Guardar en localStorage que el usuario ya vio el tutorial
+    localStorage.setItem('tutorialVisto', 'true');
+    
+    mostrarNotificacion('¡Tutorial completado! Ya puedes usar la aplicación.', 'success');
+}
+
+function saltarTutorial() {
+    tutorialActivo = false;
+    document.getElementById('tutorial-overlay').classList.remove('show');
+    
+    // Rehabilitar interacción con el mapa
+    map.dragging.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
+    
+    // Guardar en localStorage que el usuario ya vio el tutorial
+    localStorage.setItem('tutorialVisto', 'true');
+    
+    mostrarNotificacion('Puedes volver a ver el tutorial tocando el botón ❕', 'info');
+}
+
+function configurarEventosTutorial() {
+    // Botón de ayuda
+    document.getElementById('help-btn').addEventListener('click', iniciarTutorial);
+    
+    // Botones del tutorial
+    document.querySelectorAll('.tutorial-next').forEach(btn => {
+        btn.addEventListener('click', siguientePaso);
+    });
+    
+    document.querySelectorAll('.tutorial-prev').forEach(btn => {
+        btn.addEventListener('click', anteriorPaso);
+    });
+    
+    document.querySelectorAll('.tutorial-finish').forEach(btn => {
+        btn.addEventListener('click', finalizarTutorial);
+    });
+    
+    document.querySelectorAll('.tutorial-skip').forEach(btn => {
+        btn.addEventListener('click', saltarTutorial);
+    });
+    
+    // Verificar si el usuario ya vio el tutorial
+    const tutorialVisto = localStorage.getItem('tutorialVisto');
+    if (!tutorialVisto) {
+        // Mostrar tutorial automáticamente la primera vez
+        setTimeout(() => {
+            if (!tutorialActivo) {
+                iniciarTutorial();
+            }
+        }, 2000);
+    }
+}
+
+// ============================================
 // FUNCIONES DEL MAPA
 // ============================================
 function inicializarMapa() {
@@ -87,6 +224,9 @@ function inicializarMapa() {
     // Configurar eventos de ubicación
     map.on('locationfound', manejarUbicacionEncontrada);
     map.on('locationerror', manejarErrorUbicacion);
+    
+    // Configurar tutorial
+    configurarEventosTutorial();
     
     // Inicializar ubicación
     detectarUbicacion();
@@ -174,6 +314,8 @@ function buscarDentroDeLimites(direccion) {
 // FUNCIONES DE ORIGEN Y DESTINO
 // ============================================
 function toggleOrigen() {
+    if (tutorialActivo) return;
+    
     const btnOrigen = document.getElementById('btn-origen');
     
     if (!seleccionandoOrigen) {
@@ -198,6 +340,8 @@ function toggleOrigen() {
 }
 
 function toggleDestino() {
+    if (tutorialActivo) return;
+    
     const btnDestino = document.getElementById('btn-destino');
     
     if (!seleccionandoDestino) {
@@ -298,7 +442,7 @@ function crearRutaSiEsNecesario() {
         const tiempoMin = Math.round(summary.totalTime / 60);
         
         calcularYEnviarPrecio(distanciaKm);
-        mostrarNotificacion(`Ruta: ${distanciaKm.toFixed(1)} km, ${tiempoMin} min`, 'success');
+        mostrarNotificacion(`Ruta calculada: ${distanciaKm.toFixed(1)} km, ${tiempoMin} min`, 'success');
     });
     
     rutaControl.on('routingerror', () => {
@@ -310,6 +454,8 @@ function crearRutaSiEsNecesario() {
 // FUNCIONES DE LIMPIEZA
 // ============================================
 function borrarRutaDesdeApp() {
+    if (tutorialActivo) return;
+    
     let elementosEliminados = [];
     
     if (rutaControl) {
@@ -353,6 +499,8 @@ function borrarRutaDesdeApp() {
 }
 
 function restaurarUbicacion() {
+    if (tutorialActivo) return;
+    
     borrarRutaDesdeApp();
     detectarUbicacion();
     mostrarNotificacion('Ubicación restaurada', 'success');
@@ -362,6 +510,8 @@ function restaurarUbicacion() {
 // FUNCIONES PARA ANDROID
 // ============================================
 function mostrarDireccionesEnMapa(origen, destino) {
+    if (tutorialActivo) return;
+    
     if (!origen?.trim() || !destino?.trim()) {
         mostrarNotificacion('Proporciona origen y destino', 'error');
         return;
@@ -460,4 +610,5 @@ document.addEventListener('DOMContentLoaded', function() {
     window.restaurarUbicacion = restaurarUbicacion;
     window.toggleOrigen = toggleOrigen;
     window.toggleDestino = toggleDestino;
+    window.iniciarTutorial = iniciarTutorial;
 });
