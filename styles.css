@@ -272,20 +272,20 @@ html, body, #map {
 }
 
 /* ============================================
-   NOTIFICACIONES (ENCIMA DE LOS BOTONES)
+   NOTIFICACIONES (ENCIMA DE LOS BOTONES - AJUSTADO)
    ============================================ */
 .custom-alert {
     position: fixed;
-    bottom: 100px; /* Posición: 100px desde la parte inferior */
+    bottom: 130px; /* ↑ AUMENTADO: De 100px a 130px (más arriba) */
     left: 50%;
-    transform: translateX(-50%) translateY(100px); /* Animación desde abajo */
+    transform: translateX(-50%) translateY(100px);
     background: rgba(0, 0, 0, 0.9);
     color: white;
     padding: 14px 24px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 500;
-    z-index: 1001; /* Encima de los botones (z-index: 1000) */
+    z-index: 1001;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
@@ -295,11 +295,11 @@ html, body, #map {
     opacity: 0;
     max-width: 80%;
     text-align: center;
-    pointer-events: none; /* No interfiere con clics en los botones */
+    pointer-events: none;
 }
 
 .custom-alert.show {
-    transform: translateX(-50%) translateY(0); /* Posición final */
+    transform: translateX(-50%) translateY(0);
     opacity: 1;
 }
 
@@ -344,7 +344,7 @@ html, body, #map {
     
     /* Ajustes para notificaciones en móviles */
     .custom-alert {
-        bottom: 90px; /* Un poco más arriba en móviles */
+        bottom: 115px; /* ↑ AUMENTADO: De 90px a 115px (más arriba) */
         padding: 12px 20px;
         font-size: 13px;
     }
@@ -367,7 +367,7 @@ html, body, #map {
     
     /* Ajustes extra para pantallas muy pequeñas */
     .custom-alert {
-        bottom: 85px;
+        bottom: 105px; /* ↑ AUMENTADO: De 85px a 105px (más arriba) */
         max-width: 85%;
         font-size: 12px;
         padding: 10px 16px;
