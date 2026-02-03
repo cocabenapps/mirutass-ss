@@ -1,0 +1,378 @@
+/* ============================================
+   ESTILOS GENERALES
+   ============================================ */
+html, body, #map { 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+/* ============================================
+   BARRA DE NAVEGACIÓN INFERIOR ANIMADA
+   ============================================ */
+#bottom-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 12px 16px;
+    box-shadow: 
+        0 10px 30px rgba(103, 100, 253, 0.15),
+        0 2px 10px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.nav-button {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+.nav-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #6764FD, #8A87FF);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 12px rgba(103, 100, 253, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.nav-button:hover .nav-icon::before {
+    left: 100%;
+}
+
+.nav-button:hover .nav-icon {
+    background: linear-gradient(135deg, #8A87FF, #6764FD);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 20px rgba(103, 100, 253, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: white;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover .nav-icon svg {
+    transform: scale(1.1);
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6764FD;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    opacity: 0.8;
+}
+
+.nav-button:hover .nav-label {
+    color: #4b48c9;
+    opacity: 1;
+    transform: translateY(1px);
+}
+
+/* Indicador activo */
+.nav-indicator {
+    width: 4px;
+    height: 4px;
+    background: #6764FD;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -8px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.nav-item.active .nav-indicator {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav-item.active .nav-icon {
+    background: linear-gradient(135deg, #4b48c9, #6764FD);
+    box-shadow: 
+        0 6px 20px rgba(103, 100, 253, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-item.active .nav-label {
+    color: #4b48c9;
+    font-weight: 700;
+    opacity: 1;
+}
+
+/* ============================================
+   MARCADOR CENTRAL
+   ============================================ */
+#marcador-centro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border-radius: 50%;
+    background: #6764FD;
+    border: 3px solid white;
+    box-shadow: 
+        0 0 20px rgba(103, 100, 253, 0.8),
+        0 0 40px rgba(103, 100, 253, 0.4);
+    z-index: 999;
+    pointer-events: none;
+    display: none;
+}
+
+@keyframes pulse {
+    0% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 1; 
+        box-shadow: 
+            0 0 20px rgba(103, 100, 253, 0.8),
+            0 0 40px rgba(103, 100, 253, 0.4);
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.3); 
+        opacity: 0.7; 
+        box-shadow: 
+            0 0 30px rgba(103, 100, 253, 0.9),
+            0 0 60px rgba(103, 100, 253, 0.6);
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 1; 
+        box-shadow: 
+            0 0 20px rgba(103, 100, 253, 0.8),
+            0 0 40px rgba(103, 100, 253, 0.4);
+    }
+}
+
+.marcador-activo {
+    animation: pulse 1.5s infinite ease-in-out;
+    display: block !important;
+}
+
+/* ============================================
+   LOADING SCREEN
+   ============================================ */
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9ff, #ffffff);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(103, 100, 253, 0.1);
+    border-top: 3px solid #6764FD;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #6764FD;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   NOTIFICACIONES
+   ============================================ */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(103, 100, 253, 0.1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+    max-width: 80%;
+    text-align: center;
+}
+
+.custom-alert.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.custom-alert.success {
+    background: rgba(46, 213, 115, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-alert.error {
+    background: rgba(255, 71, 87, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-alert.info {
+    background: rgba(103, 100, 253, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 480px) {
+    #bottom-nav {
+        bottom: 15px;
+        padding: 10px 12px;
+        border-radius: 22px;
+    }
+    
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .nav-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .nav-label {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .nav-container {
+        gap: 4px;
+    }
+    
+    .nav-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .nav-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* ============================================
+   EFECTOS ESPECIALES
+   ============================================ */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.nav-item:hover .nav-icon {
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Foco accesible */
+.nav-button:focus {
+    outline: 2px solid rgba(103, 100, 253, 0.5);
+    outline-offset: 4px;
+    border-radius: 50px;
+}
