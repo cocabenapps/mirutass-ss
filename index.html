@@ -15,8 +15,53 @@
         <div class="loading-text">Cargando mapa...</div>
     </div>
 
-    <!-- Sistema de Notificaciones -->
+    <!-- Sistema de Notificaciones (Ahora en parte inferior) -->
     <div id="customAlert" class="custom-alert"></div>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-hidden">
+        <div class="tutorial-content">
+            <div class="tutorial-step" id="step1">
+                <h3>🎯 <span class="tutorial-step-number">Paso 1:</span> Seleccionar Origen</h3>
+                <p>Toca el botón <strong>Origen</strong> para marcar tu punto de partida en el mapa.</p>
+                <p>Luego toca en el mapa donde quieres establecer el origen.</p>
+                <div class="tutorial-actions">
+                    <button class="tutorial-btn tutorial-next">Siguiente</button>
+                    <button class="tutorial-btn tutorial-skip">Saltar Tutorial</button>
+                </div>
+            </div>
+            <div class="tutorial-step" id="step2" style="display: none;">
+                <h3>📍 <span class="tutorial-step-number">Paso 2:</span> Seleccionar Destino</h3>
+                <p>Toca el botón <strong>Destino</strong> para marcar tu punto de llegada.</p>
+                <p>Selecciona en el mapa donde quieres ir.</p>
+                <div class="tutorial-actions">
+                    <button class="tutorial-btn tutorial-prev">Anterior</button>
+                    <button class="tutorial-btn tutorial-next">Siguiente</button>
+                </div>
+            </div>
+            <div class="tutorial-step" id="step3" style="display: none;">
+                <h3>🗑️ <span class="tutorial-step-number">Paso 3:</span> Borrar Ruta</h3>
+                <p>Usa el botón <strong>Borrar</strong> para eliminar la ruta actual y empezar de nuevo.</p>
+                <p>Esto limpiará todos los puntos seleccionados.</p>
+                <div class="tutorial-actions">
+                    <button class="tutorial-btn tutorial-prev">Anterior</button>
+                    <button class="tutorial-btn tutorial-next">Siguiente</button>
+                </div>
+            </div>
+            <div class="tutorial-step" id="step4" style="display: none;">
+                <h3>📍 <span class="tutorial-step-number">Paso 4:</span> Tu Ubicación</h3>
+                <p>El botón <strong>Localización</strong> centra el mapa en tu posición actual.</p>
+                <p>Úsalo si te pierdes o quieres volver a tu ubicación.</p>
+                <div class="tutorial-actions">
+                    <button class="tutorial-btn tutorial-prev">Anterior</button>
+                    <button class="tutorial-btn tutorial-finish">Finalizar Tutorial</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Anillo de enfoque (se posiciona dinámicamente) -->
+        <div id="focus-ring" class="focus-ring"></div>
+    </div>
 
     <!-- Mapa -->
     <div id="map"></div>
@@ -24,11 +69,16 @@
     <!-- Marcador central flotante -->
     <div id="marcador-centro"></div>
 
+    <!-- Botón de Ayuda/Tutorial -->
+    <button id="help-btn" class="help-button" title="¿Cómo usar la aplicación?">
+        <span class="help-icon">❕</span>
+    </button>
+
     <!-- Barra de Navegación Inferior Animada -->
     <nav id="bottom-nav">
         <div class="nav-container">
             <!-- Origen -->
-            <div class="nav-item" onclick="toggleOrigen()">
+            <div class="nav-item" data-tutorial="origen">
                 <button id="btn-origen" class="nav-button">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24">
@@ -41,7 +91,7 @@
             </div>
 
             <!-- Destino -->
-            <div class="nav-item" onclick="toggleDestino()">
+            <div class="nav-item" data-tutorial="destino">
                 <button id="btn-destino" class="nav-button">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24">
@@ -55,7 +105,7 @@
             </div>
 
             <!-- Borrar -->
-            <div class="nav-item" onclick="borrarRutaDesdeApp()">
+            <div class="nav-item" data-tutorial="borrar">
                 <button class="nav-button">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24">
@@ -68,7 +118,7 @@
             </div>
 
             <!-- Localización -->
-            <div class="nav-item" onclick="restaurarUbicacion()">
+            <div class="nav-item" data-tutorial="localizacion">
                 <button class="nav-button">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24">
