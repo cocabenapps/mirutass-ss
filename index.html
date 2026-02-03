@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Mapa MiRutaSS - Provincia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Cargando mapa...</div>
+    </div>
+
+    <!-- Sistema de Notificaciones -->
+    <div id="customAlert" class="custom-alert"></div>
+
+    <!-- Mapa -->
+    <div id="map"></div>
+    
+    <!-- Marcador central flotante -->
+    <div id="marcador-centro"></div>
+
+    <!-- Barra de Navegación Inferior Animada -->
+    <nav id="bottom-nav">
+        <div class="nav-container">
+            <!-- Origen -->
+            <div class="nav-item" onclick="toggleOrigen()">
+                <button id="btn-origen" class="nav-button">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Origen</span>
+                </button>
+                <div class="nav-indicator"></div>
+            </div>
+
+            <!-- Destino -->
+            <div class="nav-item" onclick="toggleDestino()">
+                <button id="btn-destino" class="nav-button">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm-1 11.5v-6h2v6h-2z"/>
+                            <circle cx="12" cy="9" r="1.5"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Destino</span>
+                </button>
+                <div class="nav-indicator"></div>
+            </div>
+
+            <!-- Borrar -->
+            <div class="nav-item" onclick="borrarRutaDesdeApp()">
+                <button class="nav-button">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Borrar</span>
+                </button>
+                <div class="nav-indicator"></div>
+            </div>
+
+            <!-- Localización -->
+            <div class="nav-item" onclick="restaurarUbicacion()">
+                <button class="nav-button">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Localización</span>
+                </button>
+                <div class="nav-indicator"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
