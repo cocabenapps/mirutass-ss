@@ -174,252 +174,6 @@ html, body, #map {
 }
 
 /* ============================================
-   NOTIFICACIONES (AHORA EN PARTE INFERIOR)
-   ============================================ */
-.custom-alert {
-    position: fixed;
-    bottom: 100px; /* Encima de los botones */
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 1001; /* Encima de los botones */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.2),
-        0 2px 8px rgba(103, 100, 253, 0.1);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    opacity: 0;
-    max-width: 80%;
-    text-align: center;
-    pointer-events: none;
-}
-
-.custom-alert.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-}
-
-.custom-alert.success {
-    background: rgba(46, 213, 115, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.custom-alert.error {
-    background: rgba(255, 71, 87, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.custom-alert.info {
-    background: rgba(103, 100, 253, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* ============================================
-   BOTÓN DE AYUDA/TUTORIAL
-   ============================================ */
-.help-button {
-    position: fixed;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6764FD, #8A87FF);
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 1000;
-    box-shadow: 
-        0 4px 15px rgba(103, 100, 253, 0.3),
-        0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.help-button:hover {
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 
-        0 6px 20px rgba(103, 100, 253, 0.4),
-        0 3px 8px rgba(0, 0, 0, 0.15);
-    background: linear-gradient(135deg, #8A87FF, #6764FD);
-}
-
-.help-button:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.help-icon {
-    display: block;
-    font-size: 22px;
-    line-height: 1;
-}
-
-/* ============================================
-   TUTORIAL / TAP TARGET
-   ============================================ */
-#tutorial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s ease;
-    backdrop-filter: blur(5px);
-}
-
-#tutorial-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.tutorial-content {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.3),
-        0 5px 15px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 2001;
-    animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.tutorial-step {
-    text-align: center;
-}
-
-.tutorial-step h3 {
-    color: #6764FD;
-    margin-bottom: 20px;
-    font-size: 20px;
-}
-
-.tutorial-step-number {
-    background: #6764FD;
-    color: white;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-right: 8px;
-}
-
-.tutorial-step p {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    font-size: 16px;
-}
-
-.tutorial-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 25px;
-}
-
-.tutorial-btn {
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.tutorial-prev {
-    background: #f1f1f1;
-    color: #555;
-}
-
-.tutorial-next, .tutorial-finish {
-    background: linear-gradient(135deg, #6764FD, #8A87FF);
-    color: white;
-}
-
-.tutorial-skip {
-    background: transparent;
-    color: #888;
-    border: 1px solid #ddd;
-}
-
-.tutorial-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Anillo de enfoque */
-.focus-ring {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid #6764FD;
-    box-shadow: 
-        0 0 0 9999px rgba(0, 0, 0, 0.7),
-        0 0 20px rgba(103, 100, 253, 0.5),
-        inset 0 0 20px rgba(103, 100, 253, 0.3);
-    z-index: 2000;
-    pointer-events: none;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    animation: pulseRing 2s infinite;
-}
-
-@keyframes pulseRing {
-    0% {
-        box-shadow: 
-            0 0 0 9999px rgba(0, 0, 0, 0.7),
-            0 0 20px rgba(103, 100, 253, 0.5),
-            inset 0 0 20px rgba(103, 100, 253, 0.3);
-    }
-    50% {
-        box-shadow: 
-            0 0 0 9999px rgba(0, 0, 0, 0.7),
-            0 0 30px rgba(103, 100, 253, 0.8),
-            inset 0 0 30px rgba(103, 100, 253, 0.5);
-    }
-    100% {
-        box-shadow: 
-            0 0 0 9999px rgba(0, 0, 0, 0.7),
-            0 0 20px rgba(103, 100, 253, 0.5),
-            inset 0 0 20px rgba(103, 100, 253, 0.3);
-    }
-}
-
-/* ============================================
    MARCADOR CENTRAL
    ============================================ */
 #marcador-centro {
@@ -518,6 +272,52 @@ html, body, #map {
 }
 
 /* ============================================
+   NOTIFICACIONES
+   ============================================ */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(103, 100, 253, 0.1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+    max-width: 80%;
+    text-align: center;
+}
+
+.custom-alert.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.custom-alert.success {
+    background: rgba(46, 213, 115, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-alert.error {
+    background: rgba(255, 71, 87, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-alert.info {
+    background: rgba(103, 100, 253, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
@@ -539,31 +339,6 @@ html, body, #map {
     
     .nav-label {
         font-size: 10px;
-    }
-    
-    .help-button {
-        left: 10px;
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-    
-    .custom-alert {
-        bottom: 90px;
-        padding: 12px 20px;
-        font-size: 13px;
-    }
-    
-    .tutorial-content {
-        padding: 20px;
-    }
-    
-    .tutorial-step h3 {
-        font-size: 18px;
-    }
-    
-    .tutorial-step p {
-        font-size: 14px;
     }
 }
 
