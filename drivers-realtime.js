@@ -1,7 +1,7 @@
 // drivers-realtime.js - Sistema de choferes activos en tiempo real
 // Configuración de Supabase
 const SUPABASE_URL = 'https://dxbivfspnrhhewllirjh.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4Yml2ZnNwbnJoaGV3bGxpcmpoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg3NTIyOSwiZXhwIjoyMDcyNDUxMjI5fQ.cC3bcnsKluylg8eQShZRAPY-7fH7xU1pLvmyLRdwEoU';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4Yml2ZnNwbnJoaGV3bGxpcmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NzUyMjksImV4cCI6MjA3MjQ1MTIyOX0.y2WHxKwoIZ07WMcBYY110XIa5LBqCJh1YSAwuinGwGc';
 
 // Variables globales
 let supabaseClient = null;
