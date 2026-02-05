@@ -319,31 +319,6 @@ html, body, #map {
 }
 
 /* ============================================
-   ESTILOS PARA CHOFERES EN TIEMPO REAL
-   ============================================ */
-.driver-icon {
-    background: transparent !important;
-    border: none !important;
-}
-
-/* Animación para marcadores de choferes */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(5px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.leaflet-marker-icon:not(.leaflet-interactive) {
-    animation: fadeInUp 0.4s ease-out;
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
-}
-
-/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
@@ -372,11 +347,6 @@ html, body, #map {
         bottom: 115px; /* ↑ AUMENTADO: De 90px a 115px (más arriba) */
         padding: 12px 20px;
         font-size: 13px;
-    }
-    
-    /* Choferes más pequeños en móviles */
-    .driver-icon {
-        transform: scale(0.9);
     }
 }
 
