@@ -319,6 +319,31 @@ html, body, #map {
 }
 
 /* ============================================
+   ESTILOS PARA CHOFERES EN TIEMPO REAL
+   ============================================ */
+.driver-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Animación para marcadores de choferes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(5px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.leaflet-marker-icon:not(.leaflet-interactive) {
+    animation: fadeInUp 0.4s ease-out;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
@@ -327,26 +352,31 @@ html, body, #map {
         padding: 10px 12px;
         border-radius: 22px;
     }
-    
+
     .nav-icon {
         width: 40px;
         height: 40px;
     }
-    
+
     .nav-icon svg {
         width: 20px;
         height: 20px;
     }
-    
+
     .nav-label {
         font-size: 10px;
     }
-    
+
     /* Ajustes para notificaciones en móviles */
     .custom-alert {
         bottom: 115px; /* ↑ AUMENTADO: De 90px a 115px (más arriba) */
         padding: 12px 20px;
         font-size: 13px;
+    }
+    
+    /* Choferes más pequeños en móviles */
+    .driver-icon {
+        transform: scale(0.9);
     }
 }
 
@@ -354,17 +384,17 @@ html, body, #map {
     .nav-container {
         gap: 4px;
     }
-    
+
     .nav-icon {
         width: 36px;
         height: 36px;
     }
-    
+
     .nav-icon svg {
         width: 18px;
         height: 18px;
     }
-    
+
     /* Ajustes extra para pantallas muy pequeñas */
     .custom-alert {
         bottom: 105px; /* ↑ AUMENTADO: De 85px a 105px (más arriba) */
