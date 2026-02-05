@@ -61,15 +61,15 @@ function actualizarEstadoNav(boton, activo) {
 // ============================================
 function inicializarMapa() {
     mostrarLoading();
-    
+
     map = L.map('map').setView(centroProvincia, 10);
-    
+
     // Establecer límites
     map.setMaxBounds(limitesProvinciaSanctiSpiritus);
     map.on('drag', function() {
         map.panInsideBounds(limitesProvinciaSanctiSpiritus, { animate: false });
     });
-    
+
     // Cargar tiles
     tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
@@ -77,17 +77,17 @@ function inicializarMapa() {
         attribution: '© OpenStreetMap',
         bounds: limitesProvinciaSanctiSpiritus
     }).addTo(map);
-    
+
     tileLayer.on('load', ocultarLoading);
     tileLayer.on('tileerror', () => {
         mostrarNotificacion('Error cargando el mapa. Verifica tu conexión.', 'error');
         ocultarLoading();
     });
-    
+
     // Configurar eventos de ubicación
     map.on('locationfound', manejarUbicacionEncontrada);
     map.on('locationerror', manejarErrorUbicacion);
-    
+
     // Inicializar ubicación
     detectarUbicacion();
 }
@@ -134,6 +134,13 @@ function manejarUbicacionEncontrada(e) {
         .catch(error => {
             console.warn('Error obteniendo dirección:', error);
         });
+    
+    // ============================================
+    // NUEVA LÍNEA: ACTUALIZAR SISTEMA DE CHOFERES
+    // ============================================
+    if (window.updateDriverPosition) {
+        window.updateDriverPosition(e.latitude, e.longitude);
+    }
 }
 
 function manejarErrorUbicacion(e) {
@@ -175,16 +182,16 @@ function buscarDentroDeLimites(direccion) {
 // ============================================
 function toggleOrigen() {
     const btnOrigen = document.getElementById('btn-origen');
-    
+
     if (!seleccionandoOrigen) {
         // Activar modo selección origen
         seleccionandoOrigen = true;
         seleccionandoDestino = false;
-        
+
         // Actualizar UI
         actualizarEstadoNav(btnOrigen, true);
         document.getElementById('btn-destino').classList.remove('active');
-        
+
         // Activar marcador flotante
         document.getElementById('marcador-centro').classList.add('marcador-activo');
         mostrarNotificacion('Selecciona el punto de origen en el mapa', 'info');
@@ -199,16 +206,16 @@ function toggleOrigen() {
 
 function toggleDestino() {
     const btnDestino = document.getElementById('btn-destino');
-    
+
     if (!seleccionandoDestino) {
         // Activar modo selección destino
         seleccionandoDestino = true;
         seleccionandoOrigen = false;
-        
+
         // Actualizar UI
         actualizarEstadoNav(btnDestino, true);
         document.getElementById('btn-origen').classList.remove('active');
-        
+
         // Activar marcador flotante
         document.getElementById('marcador-centro').classList.add('marcador-activo');
         mostrarNotificacion('Selecciona el punto de destino en el mapa', 'info');
@@ -223,20 +230,20 @@ function toggleDestino() {
 
 function confirmarMarcadorFlotante(tipo) {
     const coords = map.getCenter();
-    
+
     if (!estaDentroDeLimites(coords.lat, coords.lng)) {
         mostrarNotificacion('El punto seleccionado está fuera de la provincia', 'error');
         return;
     }
-    
+
     mostrarNotificacion('Obteniendo dirección...', 'info');
-    
+
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`)
         .then(res => res.ok ? res.json() : Promise.reject('Error en servidor'))
         .then(data => {
             if (data?.display_name) {
                 const direccion = data.display_name;
-                
+
                 if (tipo === 'origen') {
                     if (markerUbicacion) {
                         markerUbicacion.setLatLng(coords).setPopupContent('Origen manual').openPopup();
@@ -252,7 +259,7 @@ function confirmarMarcadorFlotante(tipo) {
                     if (window.Android?.setDestino) window.Android.setDestino(direccion);
                     mostrarNotificacion('Destino establecido', 'success');
                 }
-                
+
                 crearRutaSiEsNecesario();
             }
         })
@@ -276,13 +283,13 @@ function obtenerOrigenActual() {
 function crearRutaSiEsNecesario() {
     const origen = obtenerOrigenActual();
     const destino = marcadorDestino?.getLatLng();
-    
+
     if (!origen || !destino) return;
-    
+
     if (rutaControl) map.removeControl(rutaControl);
-    
+
     mostrarNotificacion('Calculando ruta óptima...', 'info');
-    
+
     rutaControl = L.Routing.control({
         waypoints: [origen, destino],
         lineOptions: { styles: [{ color: '#6764FD', weight: 5 }] },
@@ -290,17 +297,17 @@ function crearRutaSiEsNecesario() {
         addWaypoints: false,
         routeWhileDragging: false
     }).addTo(map);
-    
+
     rutaControl.on('routesfound', function(e) {
         const routes = e.routes;
         const summary = routes[0].summary;
         const distanciaKm = summary.totalDistance / 1000;
         const tiempoMin = Math.round(summary.totalTime / 60);
-        
+
         calcularYEnviarPrecio(distanciaKm);
         mostrarNotificacion(`Ruta: ${distanciaKm.toFixed(1)} km, ${tiempoMin} min`, 'success');
     });
-    
+
     rutaControl.on('routingerror', () => {
         mostrarNotificacion('No se pudo calcular la ruta', 'error');
     });
@@ -311,42 +318,42 @@ function crearRutaSiEsNecesario() {
 // ============================================
 function borrarRutaDesdeApp() {
     let elementosEliminados = [];
-    
+
     if (rutaControl) {
         map.removeControl(rutaControl);
         rutaControl = null;
         elementosEliminados.push('ruta');
     }
-    
+
     if (markerUbicacion) {
         map.removeLayer(markerUbicacion);
         markerUbicacion = null;
         elementosEliminados.push('origen');
     }
-    
+
     if (marcadorDestino) {
         map.removeLayer(marcadorDestino);
         marcadorDestino = null;
         elementosEliminados.push('destino');
     }
-    
+
     origenModificado = false;
     coordenadasUbicacion = null;
-    
+
     // Limpiar estados de UI
     seleccionandoOrigen = false;
     seleccionandoDestino = false;
     document.getElementById('btn-origen').classList.remove('active');
     document.getElementById('btn-destino').classList.remove('active');
     document.getElementById('marcador-centro').classList.remove('marcador-activo');
-    
+
     // Actualizar navegación
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    
+
     if (window.Android?.limpiarDirecciones) {
         window.Android.limpiarDirecciones();
     }
-    
+
     if (elementosEliminados.length > 0) {
         mostrarNotificacion('Ruta eliminada correctamente', 'success');
     }
@@ -366,9 +373,9 @@ function mostrarDireccionesEnMapa(origen, destino) {
         mostrarNotificacion('Proporciona origen y destino', 'error');
         return;
     }
-    
+
     mostrarNotificacion('Buscando ubicaciones...', 'info');
-    
+
     Promise.all([
         buscarDentroDeLimites(origen),
         buscarDentroDeLimites(destino)
@@ -376,31 +383,31 @@ function mostrarDireccionesEnMapa(origen, destino) {
     .then(([dataOrigen, dataDestino]) => {
         const coordsOrigen = L.latLng(dataOrigen.lat, dataOrigen.lon);
         const coordsDestino = L.latLng(dataDestino.lat, dataDestino.lon);
-        
+
         // Limpiar marcadores anteriores
         if (markerUbicacion) map.removeLayer(markerUbicacion);
         if (marcadorDestino) map.removeLayer(marcadorDestino);
-        
+
         // Crear nuevos marcadores
         markerUbicacion = L.marker(coordsOrigen)
             .addTo(map)
             .bindPopup(`📍 <b>Origen</b><br>${origen}`)
             .openPopup();
-        
+
         marcadorDestino = L.marker(coordsDestino)
             .addTo(map)
             .bindPopup(`🎯 <b>Destino</b><br>${destino}`)
             .openPopup();
-        
+
         origenModificado = true;
-        
+
         // Ajustar vista
         const group = L.featureGroup([markerUbicacion, marcadorDestino]);
         map.fitBounds(group.getBounds().pad(0.1));
-        
+
         // Calcular ruta
         if (rutaControl) map.removeControl(rutaControl);
-        
+
         rutaControl = L.Routing.control({
             waypoints: [coordsOrigen, coordsDestino],
             lineOptions: { styles: [{ color: '#6764FD', weight: 5 }] },
@@ -409,14 +416,14 @@ function mostrarDireccionesEnMapa(origen, destino) {
             routeWhileDragging: false,
             show: false
         }).addTo(map);
-        
+
         rutaControl.on('routesfound', function(e) {
             const distanciaKm = e.routes[0].summary.totalDistance / 1000;
             const tiempoMin = Math.round(e.routes[0].summary.totalTime / 60);
             calcularYEnviarPrecio(distanciaKm);
             mostrarNotificacion(`Ruta: ${distanciaKm.toFixed(1)} km, ${tiempoMin} min`, 'success');
         });
-        
+
         mostrarNotificacion('Ubicaciones encontradas', 'success');
     })
     .catch(error => {
@@ -447,13 +454,13 @@ function calcularYEnviarPrecio(distanciaKm) {
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar mapa
     inicializarMapa();
-    
+
     // Manejo de errores global
     window.addEventListener('error', function(e) {
         console.error('Error global:', e.error);
         mostrarNotificacion('Error inesperado', 'error');
     });
-    
+
     // Exponer funciones globales para Android
     window.mostrarDireccionesEnMapa = mostrarDireccionesEnMapa;
     window.borrarRutaDesdeApp = borrarRutaDesdeApp;
