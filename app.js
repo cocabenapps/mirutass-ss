@@ -134,13 +134,6 @@ function manejarUbicacionEncontrada(e) {
         .catch(error => {
             console.warn('Error obteniendo dirección:', error);
         });
-    
-    // ============================================
-    // NUEVA LÍNEA: ACTUALIZAR SISTEMA DE CHOFERES
-    // ============================================
-    if (window.updateDriverPosition) {
-        window.updateDriverPosition(e.latitude, e.longitude);
-    }
 }
 
 function manejarErrorUbicacion(e) {
