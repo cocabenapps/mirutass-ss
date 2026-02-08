@@ -428,9 +428,12 @@ function mostrarDireccionesEnMapa(origen, destino) {
 // FUNCIONES DE PRECIO
 // ============================================
 function calcularPrecio(distanciaKm) {
-    const tarifaPorKm = 150.0;
+    const tarifaPorKm = 200.0; // tarifa ajustada
     let precio = distanciaKm * tarifaPorKm;
-    return Math.max(Math.round(precio), 50); // Mínimo 50 pesos
+
+    // Ajuste: inflar el precio con un margen fijo
+    const margen = 75; 
+    return Math.max(Math.round(precio + margen), 50);
 }
 
 function calcularYEnviarPrecio(distanciaKm) {
